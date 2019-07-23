@@ -6,6 +6,8 @@ public class InteractableItems : MonoBehaviour
 {
     public List<InteractableObject> usableItemList;
     public Dictionary<string, string> examineDictionary = new Dictionary<string, string>();
+
+    public bool opened = false;
     
     public Dictionary<string, string> takeDictionary = new Dictionary<string, string>();
     [HideInInspector] public List<string> nounsInRoom = new List<string>();
@@ -109,12 +111,17 @@ public class InteractableItems : MonoBehaviour
      public Dictionary<string, string> Open (string[] separatedInputWords)
     {
         string noun = separatedInputWords[1];
+
+        if(noun == "box")
+        {
+            opened = true;
+        }
      
         if(objectInRoom.Contains(noun))
         {
-            //nounsInInventory.Add("magic");
+            //nounsInInventory.Add("wand");
             objectInRoom.Remove(noun);
-            controller.LogStringWithReturn("You open the " + noun + " there is a Magic wand.");
+            controller.LogStringWithReturn("You open the " + noun + " there is a wand inside.");
             //AddActionResponsesToUseDictionary ();
             return openDictionary;
         }
