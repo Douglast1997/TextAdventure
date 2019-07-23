@@ -10,6 +10,10 @@ public class InteractableItems : MonoBehaviour
     public Dictionary<string, string> takeDictionary = new Dictionary<string, string>();
     [HideInInspector] public List<string> nounsInRoom = new List<string>();
 
+    
+    public Dictionary<string, string> openDictionary = new Dictionary<string, string>();
+    [HideInInspector] public List<string> objectInRoom = new List<string>();
+
     Dictionary<string, ActionResponse> useDictionary = new Dictionary<string, ActionResponse>();
 
     List<string> nounsInInventory = new List<string>();
@@ -27,6 +31,7 @@ public class InteractableItems : MonoBehaviour
         if(!nounsInInventory.Contains(interactableObjectInRoom.noun))
         {
             nounsInRoom.Add(interactableObjectInRoom.noun);
+            objectInRoom.Add(interactableObjectInRoom.noun);
             return interactableObjectInRoom.description;
         }
 
@@ -78,10 +83,17 @@ public class InteractableItems : MonoBehaviour
     public void DisplayInventory()
     {
         controller.LogStringWithReturn("You look in your backpack, inside you have:");
-
-        for (int i = 0; i < nounsInInventory.Count; i++)
+        
+        if(nounsInInventory.Count == 0)
         {
-            controller.LogStringWithReturn(nounsInInventory[i]);
+            controller.LogStringWithReturn("Nothing to use!");
+        }
+        else
+        {
+            for (int i = 0; i < nounsInInventory.Count; i++)
+            {
+                controller.LogStringWithReturn(nounsInInventory[i]);
+            }
         }
     }
 
@@ -90,6 +102,27 @@ public class InteractableItems : MonoBehaviour
         examineDictionary.Clear();
         takeDictionary.Clear();
         nounsInRoom.Clear();
+        openDictionary.Clear();
+        objectInRoom.Clear();
+    }
+
+     public Dictionary<string, string> Open (string[] separatedInputWords)
+    {
+        string noun = separatedInputWords[1];
+     
+        if(objectInRoom.Contains(noun))
+        {
+            //nounsInInventory.Add("magic");
+            objectInRoom.Remove(noun);
+            controller.LogStringWithReturn("You open the " + noun + " there is a Magic wand.");
+            //AddActionResponsesToUseDictionary ();
+            return openDictionary;
+        }
+        else
+        {
+            controller.LogStringWithReturn("There is no " + noun + " here to open.");
+            return null;
+        }
     }
 
     public Dictionary<string, string> Take (string[] separatedInputWords)
